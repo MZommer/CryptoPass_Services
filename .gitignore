@@ -25,6 +25,9 @@ node_modules/
 # Output of 'npm pack'
 *.tgz
 
+# Replit env variables
+.replit
+
 # dotenv environment variable files
 .env
 .env.development.local

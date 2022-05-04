@@ -17,20 +17,20 @@ app.use((req, res, next) => { // HTTPS redirection
 app.use('/', routes);
 
 app.use((err, req, res, next) => {
-  res.status(err.status || 400).json({
-    success: false,
-    message: err.message || 'An error occured.',
-    errors: err.error || [],
-  });
+    res.status(err.status || 400).json({
+        success: false,
+        message: err.message || 'An error occured.',
+        errors: err.error || [],
+    });
 });
 
 app.use((req, res) => {
-  res.status(403).json({ success: false, message: 'Forbidden' });
+    res.status(403).json({ success: false, message: 'Forbidden' });
 });
 
 app.listen(PORT, () => {
-    console.log(`
-		--------------------------------------------------
-		Server: CPS\nEnviroment: DEV\nPort: ${PORT}
-		--------------------------------------------------`);
+console.log(`
+--------------------------------------------------
+Server: CPS\nEnviroment: DEV\nPort: ${PORT}
+--------------------------------------------------`);
 });

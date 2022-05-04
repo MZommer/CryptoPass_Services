@@ -1,5 +1,5 @@
-const DB = require.main.require("./services/db");
+const DB = require.main.require("./services/db.js");
 
-module.export = (req, res, next) => {
+module.exports = (req, res, next) => {
 	DB.createEvent(req.body);
 }
