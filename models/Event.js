@@ -1,11 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const Event = new Schema({
-    EventID: {
-        type: String,
-        required: true,
-        unique: true,
-    },
+const EventSchema = new Schema({
     UserID: {
         type: String,
         required: true,
@@ -28,6 +23,10 @@ const Event = new Schema({
         type: Date,
         required: true,
     },
+    ReleaseDate: {
+        type: Date,
+        required: true,
+    },
     // Assets
     IsActive: {
         type: Boolean,
@@ -35,6 +34,18 @@ const Event = new Schema({
     },
     IsPublic: {
         type: Boolean,
+        required: true,
+    },
+    TicketAmount: {
+        type: Number,
+        requiered: true,
+    },
+    Tickets: {
+        type: Array,
+        required: true,
+    },
+    TicketTypes: {
+        type: Array,
         required: true,
     },
     Genres: {
@@ -49,9 +60,10 @@ const Event = new Schema({
         type: Number,
         required: true,
     },
-    
 },
 {
     timestamps: true,
     versionKey: false,
 })
+
+module.exports = model(EventSchema);
