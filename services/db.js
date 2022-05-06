@@ -1,22 +1,18 @@
-const { MongoClient } = require('mongodb');
+const { connect } = require("mongoose");
 const MongoURL = process.env.MongoURL;
-const client = new MongoClient(MongoURL, { useNewUrlParser: true, useUnifiedTopology: true });
 
-class DB {
-    static createEvent(){
-        event = {
-            
-        }
-        client.connect(function(err, db) {
-            if (err) throw err;
-            var dbo = db.db("CryptoPass");
-            dbo.collection("Events").insertOne(event, function(err, res) {
-              if (err) throw err;
-              db.close();
-              console.log("Event created");
-            });
-          });
+(async () => {
+    try {
+        const db = await connect(MongoURL);
+        console.log("DB connected to", db.connection.name)
     }
-}
+    catch (err){
+        console.error(err)
+    }
+})()
 
-module.exports = DB;
+module.exports = class {
+    static createEvent(){
+        // Implement Mongoose
+    }
+};
