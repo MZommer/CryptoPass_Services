@@ -1,5 +1,7 @@
 const { connect } = require("mongoose");
+require("dotenv").config();
 const MongoURL = process.env.MongoURL;
+
 
 const Event = require("../models/Event");
 

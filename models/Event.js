@@ -66,4 +66,4 @@ const EventSchema = new Schema({
     versionKey: false,
 })
 
-module.exports = model(EventSchema);
+module.exports = model("Event", EventSchema);
