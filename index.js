@@ -6,11 +6,11 @@ const routes = require('./routes');
 const app = express();
 
 const PORT = process.env.PORT || 8080;
-
+app.use(express.static("static"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.set('trust proxy', true);
 app.use(morgan('dev'));  // Logger
+app.set('trust proxy', true);
 app.use((req, res, next) => {  // HTTPS redirection
   if (!req.secure)
   	return res.redirect('https://' + req.get('host') + req.url);
