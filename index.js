@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require("cors");
 const bodyParser = require('body-parser');
-const cookieParser = require("cookie-parser");
 const morgan = require('morgan')
 const routes = require('./routes');
 
@@ -11,7 +10,6 @@ const PORT = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cookieParser());
 app.use(morgan('dev'));  // Logger
 app.use(express.static("static"));
 app.set('trust proxy', true);
