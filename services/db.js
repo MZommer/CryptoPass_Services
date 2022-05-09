@@ -2,7 +2,6 @@ const { connect } = require("mongoose");
 require("dotenv").config();
 const MongoURL = process.env.MongoURL;
 
-
 const Event = require("../models/Event");
 
 (async () => {
@@ -16,10 +15,9 @@ const Event = require("../models/Event");
 })()
 
 module.exports = class {
-    static createEvent(_event){
+    static async createEvent(_event){
         _event.IsActive = _event.IsActive || false;
         const event = new Event(_event);
-        const { _id } = event.save();
-        return _id;
+        return (await event.save())._id;
     }
 };
