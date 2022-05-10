@@ -1,5 +1,6 @@
 const { connect } = require("mongoose");
 require("dotenv").config();
+const HashIds = new (require("hashids"))(process.env.HashKey);
 const MongoURL = process.env.MongoURL;
 
 const Event = require("../models/Event");
@@ -17,7 +18,13 @@ const Event = require("../models/Event");
 module.exports = class {
     static async createEvent(_event){
         _event.IsActive = _event.IsActive || false;
-        const event = new Event(_event);
-        return (await event.save())._id;
+        return HashIds.encodeHex((await Event.create(_event))._id.toString());
+    }
+    static async getEvent(id){
+        let event = await Event.findById(HashIds.decodeHex(id)).catch(err => console.error(err.message));
+        event = event.toObject();
+        delete event._id;
+        event.id = id;
+        return event;
     }
 };
