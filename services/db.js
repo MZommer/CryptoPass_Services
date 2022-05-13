@@ -27,4 +27,7 @@ module.exports = class {
         event.id = id;
         return event;
     }
+    static async searchEvent(searchParams){
+        // to implement
+    }
 };
