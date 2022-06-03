@@ -28,6 +28,14 @@ module.exports = class {
         return event;
     }
     static async searchEvent(searchParams){
-        // to implement
+        Event.aggregate([
+            {
+                $match: {
+                    MinAge: {$gte: searchParams.MinAge},
+                    UserID: searchParams.UserID,
+                    Description: {$regex: ""}
+                }
+            }
+        ])
     }
 };

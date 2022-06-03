@@ -2,8 +2,8 @@ const events = require("express").Router();
 const DB = require.main.require("./services/db.js");
 
 events.get("/search/:page?", async (req, res, next) => {
-    const page = req.params.page || 1;
-    res.json(await DB.searchEvent(req.body, page));
+    req.body.page = req.params.page || 1;
+    res.json(await DB.searchEvent(req.body));
     next();
 });
 
