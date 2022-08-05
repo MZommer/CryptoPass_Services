@@ -9,7 +9,24 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract Event is ERC721 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-    
+
+
+
+    //  DB Vars //
+    string Title;
+    string Description;
+    string Location;
+    uint32 Date;  // UNIX Timestamp
+    uint32 ReleaseDate; // ^^
+    bool IsActive;
+    bool IsPublic;
+    uint32 TicketAmount;
+    string[] TicketTypes;
+    string[] Genres;
+    string[] Tags;
+    uint8 MinAge;
+
+
     mapping(string => mapping(uint256 => address)) private _tickets;
 
     constructor() ERC721("Event", "EVT") {
