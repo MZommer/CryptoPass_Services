@@ -17,8 +17,8 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     // Base URL for tokens metadata
     string public baseTokenURI;
     string _contractURI;
-    uint256 constant MAX_SUPPLY;
-    uint256 constant RESERVED_SUPPLY;
+    uint256 MAX_SUPPLY;
+    uint256 RESERVED_SUPPLY;
     // Reserved addreses
     mapping(address => uint256) public teamMinted;
     uint256 public mintedReserved = 0;
@@ -46,7 +46,6 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     string[] public Tags;
     uint8    public MinAge;
     uint32   public mintedTickets;
-    string   public baseTokenURI;
 
     // make the mapping for the address -->
     mapping(string => mapping(uint256 => address)) private _tickets;
@@ -173,11 +172,6 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     // Override so the openzeppelin tokenURI() method will use this method to create the full tokenURI instead
     function _baseURI() internal view virtual override returns (string memory) {
         return baseTokenURI;
-    }
-
-    function withdrawFunds() public {
-        require(communityAddress != address(0), "Community address not set");
-        communityAddress.transfer(address(this).balance);
     }
 
     function createSale(
