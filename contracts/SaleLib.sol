@@ -8,7 +8,6 @@ library SaleLib {
         uint256 whitelistEndTime;
         uint256 price;
         uint256 endPrice;
-        uint256 dutchTimeFrame;
         uint256 maxMintPerTx;
         uint256 maxMintPerAccount;
         bool isPaused;
@@ -21,7 +20,6 @@ library SaleLib {
         uint256 pWhitelistEndTime,
         uint256 pPrice,
         uint256 pEndPrice,
-        uint256 pDutchTimeFrame,
         uint256 pMaxMintPerTx,
         uint256 pMaxMintPerAccount,
         bool pIsPaused,
@@ -43,7 +41,6 @@ library SaleLib {
                 pWhitelistEndTime,
                 pPrice,
                 pEndPrice,
-                pDutchTimeFrame,
                 pMaxMintPerTx,
                 pMaxMintPerAccount,
                 pIsPaused,
@@ -64,24 +61,11 @@ library SaleLib {
         // Make sure that sale started.
         require(block.timestamp >= sale.startTime, "Sale not started");
 
-        // if it's not a dutch sale, return the sale price
-        if(sale.dutchTimeFrame == 0 || sale.price == sale.endPrice || sale.endPrice == 0) {
+        if( sale.price == sale.endPrice || sale.endPrice == 0) {
             return sale.price;
         }
 
-        
-        // Calculate elapsed time in seconds
-        uint256 elapsed = block.timestamp - sale.startTime;
-
-        // If elapsed is lower than the dutch sale time frame, calculate the price
-        if(elapsed < sale.dutchTimeFrame) { 
-
-            // Calculate price variation in seconds depending on decreasing or increasing dutch sale
-            uint256 priceVariationPerSec = (sale.price > sale.endPrice ? sale.price - sale.endPrice : sale.endPrice - sale.price) / sale.dutchTimeFrame;
-            return sale.price > sale.endPrice ? sale.price - priceVariationPerSec * elapsed : sale.price + priceVariationPerSec * elapsed;
-        }
-        
-        // If we got here, dutch sale is over. Return the end price
+        // If we got here, Return the end price
         return sale.endPrice;
     }
 
@@ -89,7 +73,6 @@ library SaleLib {
         uint256 pWhitelistEndTime,
         uint256 pPrice,
         uint256 pEndPrice,
-        uint256 pDutchTimeFrame,
         uint256 pMaxMintPerTx,
         uint256 pMaxMintPerAccount,
         bool pIsPaused,
@@ -119,7 +102,6 @@ library SaleLib {
         require(pPrice > 0, "Price must be greater than 0");
         sale.price = pPrice;
         sale.endPrice = pEndPrice;
-        sale.dutchTimeFrame = pDutchTimeFrame;
         sale.maxMintPerTx = pMaxMintPerTx;
         sale.maxMintPerAccount = pMaxMintPerAccount;
         sale.stock = pStock;
