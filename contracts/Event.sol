@@ -17,7 +17,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     // Base URL for tokens metadata
     string public baseTokenURI;
     string _contractURI;
-    uint256 MAX_SUPPLY;
+    uint256     MAX_SUPPLY;
     uint256 RESERVED_SUPPLY;
     // Reserved addreses
     mapping(address => uint256) public teamMinted;
@@ -45,12 +45,35 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     string[] public Genres;
     string[] public Tags;
     uint8    public MinAge;
-    uint32   public mintedTickets;
+    uint32   public mintedTickets = 0;
 
     // make the mapping for the address -->
     mapping(string => mapping(uint256 => address)) private _tickets;
 
-    constructor() ERC721("Event", "EVT") {
+    constructor(string pTitle,
+                string pDescription,
+                string pLocation,
+                uint32 pDate,
+                uint32 pReleaseDate,
+                bool   pIsActive,
+                bool   pIsPublic,
+                uint32 pTicketAmount,
+                string[] pTicketTypes,
+                string[] pGenres,
+                string[] pTags,
+                uint8  pMinAge) ERC721("Event", "EVT") {
+        Title = pTitle;
+        Description = pDescription;
+        Location = pLocation;
+        Date = pDate;
+        ReleaseDate = pReleaseDate;
+        IsActive = pIsActive;
+        IsPublic = pIsPublic;
+        TicketAmount = pTicketAmount;
+        TicketTypes = pTicketTypes;
+        Genres = pGenres;
+        Tags = pTags;
+        MinAge = pMinAge;
     }
     
     function mint(
