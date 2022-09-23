@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/MZommer/CryptoPass_Services#readme",
   "dependencies": {
+    "@openzeppelin/cli": "^2.8.2",
     "@openzeppelin/contracts": "^4.6.0",
     "body-parser": "^1.20.0",
     "dotenv": "^16.0.0",

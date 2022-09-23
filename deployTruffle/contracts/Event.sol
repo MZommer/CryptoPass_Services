@@ -2,6 +2,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+contract Migrations {
+  address public owner;
+  uint public last_completed_migration;
+
+
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -50,8 +55,9 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     // make the mapping for the address -->
     mapping(string => mapping(uint256 => address)) private _tickets;
 
-    constructor(){}
-    
+  constructor() public {
+    owner = msg.sender;
+  }
     function mint(
         uint256 pSaleId,
         address pAccount,
