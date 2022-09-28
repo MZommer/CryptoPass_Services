@@ -41,26 +41,20 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     bool     public IsActive;
     bool     public IsPublic;
     uint32   public TicketAmount;
-    string[] public TicketTypes;
-    string[] public Genres;
-    string[] public Tags;
     uint8    public MinAge;
     uint32   public mintedTickets = 0;
 
     // make the mapping for the address -->
     mapping(string => mapping(uint256 => address)) private _tickets;
 
-    constructor(string pTitle,
-                string pDescription,
-                string pLocation,
+    constructor(string memory pTitle,
+                string memory pDescription,
+                string memory pLocation,
                 uint32 pDate,
                 uint32 pReleaseDate,
                 bool   pIsActive,
                 bool   pIsPublic,
                 uint32 pTicketAmount,
-                string[] pTicketTypes,
-                string[] pGenres,
-                string[] pTags,
                 uint8  pMinAge) ERC721("Event", "EVT") {
         Title = pTitle;
         Description = pDescription;
@@ -70,9 +64,6 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         IsActive = pIsActive;
         IsPublic = pIsPublic;
         TicketAmount = pTicketAmount;
-        TicketTypes = pTicketTypes;
-        Genres = pGenres;
-        Tags = pTags;
         MinAge = pMinAge;
     }
     
