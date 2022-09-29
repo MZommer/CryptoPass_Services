@@ -126,9 +126,9 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         sales[pSaleId].minted += pMintAmount;
     }
 
-    function markTicket(tokenID){
+    function markTicket(uint256 tokenID) public{
         require(_markedTokens[tokenID], "Ticket already signed");
-        require(msg.sender != this.balanceOf(tokenID), "You are not the owner of the nft");
+        require(msg.sender != this.ownerOf(tokenID), "You are not the owner of the nft");
         _markedTokens[tokenID] = true; 
     }
 
