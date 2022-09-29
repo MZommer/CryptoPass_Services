@@ -31,6 +31,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     // ?? Research abt SaleLib --> TIMM.sol 
     SaleLib.Sale[] public sales;
     
+    mapping(uint256 => bool) private _markedTokens;
 
     //  DB Vars //
     string   public Title;
@@ -75,7 +76,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         require(pSaleId < sales.length, "Invalid sale id");
         SaleLib.Sale storage sale = sales[pSaleId];
         require(sale.isActive(), "Sale is not active");
-/*
+        /*
         // Check if its whitelisted, if whitelist stage has not finished.
         if (block.timestamp <= sale.whitelistEndTime) {
             require(
@@ -87,7 +88,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
                 "Account not whitelisted"
             );
         }
-*/
+        */
         require(
             pMintAmount > 0 && pMintAmount <= sale.maxMintPerTx,
             "Invalid mint amount"
@@ -125,6 +126,11 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         sales[pSaleId].minted += pMintAmount;
     }
 
+    function markTicket(tokenID){
+        require(_markedTokens[tokenID], "Ticket already signed");
+        require(msg.sender != this.balanceOf(tokenID), "You are not the owner of the nft");
+        _markedTokens[tokenID] = true; 
+    }
 
     function _mintMultipleUnsafe(address pAccount, uint256 pAmount) private {
         // Mint each token
