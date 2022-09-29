@@ -65,6 +65,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         IsActive = pIsActive;
         IsPublic = pIsPublic;
         TicketAmount = pTicketAmount;
+        MAX_SUPPLY = TicketAmount;
         MinAge = pMinAge;
     }
     
@@ -130,6 +131,18 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         require(_markedTokens[tokenID], "Ticket already signed");
         require(msg.sender != this.ownerOf(tokenID), "You are not the owner of the nft");
         _markedTokens[tokenID] = true; 
+    }
+    function getAddressTokens(address owner) public view returns (uint256[] memory) {
+        uint256[] memory tokens = new uint256[](this.balanceOf(owner));
+        for (uint256 i = 0; i < _tokenCounter; i++){
+            if (ownerOf(i) == owner){
+                tokens[tokens.length] = i;
+            }
+        }
+        return tokens;
+    }
+    function getTokens() public view returns (uint256[] memory) {
+       return this.getAddressTokens(msg.sender);
     }
 
     function _mintMultipleUnsafe(address pAccount, uint256 pAmount) private {
