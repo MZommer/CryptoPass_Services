@@ -31,6 +31,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     // ?? Research abt SaleLib --> TIMM.sol 
     SaleLib.Sale[] public sales;
     
+    mapping(uint256 => bool) private _markedTokens;
 
     //  DB Vars //
     string   public Title;
@@ -41,26 +42,20 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     bool     public IsActive;
     bool     public IsPublic;
     uint32   public TicketAmount;
-    string[] public TicketTypes;
-    string[] public Genres;
-    string[] public Tags;
     uint8    public MinAge;
     uint32   public mintedTickets = 0;
 
     // make the mapping for the address -->
     mapping(string => mapping(uint256 => address)) private _tickets;
 
-    constructor(string pTitle,
-                string pDescription,
-                string pLocation,
+    constructor(string memory pTitle,
+                string memory pDescription,
+                string memory pLocation,
                 uint32 pDate,
                 uint32 pReleaseDate,
                 bool   pIsActive,
                 bool   pIsPublic,
                 uint32 pTicketAmount,
-                string[] pTicketTypes,
-                string[] pGenres,
-                string[] pTags,
                 uint8  pMinAge) ERC721("Event", "EVT") {
         Title = pTitle;
         Description = pDescription;
@@ -70,9 +65,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         IsActive = pIsActive;
         IsPublic = pIsPublic;
         TicketAmount = pTicketAmount;
-        TicketTypes = pTicketTypes;
-        Genres = pGenres;
-        Tags = pTags;
+        MAX_SUPPLY = TicketAmount;
         MinAge = pMinAge;
     }
     
@@ -84,7 +77,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         require(pSaleId < sales.length, "Invalid sale id");
         SaleLib.Sale storage sale = sales[pSaleId];
         require(sale.isActive(), "Sale is not active");
-/*
+        /*
         // Check if its whitelisted, if whitelist stage has not finished.
         if (block.timestamp <= sale.whitelistEndTime) {
             require(
@@ -96,7 +89,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
                 "Account not whitelisted"
             );
         }
-*/
+        */
         require(
             pMintAmount > 0 && pMintAmount <= sale.maxMintPerTx,
             "Invalid mint amount"
@@ -134,6 +127,23 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         sales[pSaleId].minted += pMintAmount;
     }
 
+    function markTicket(uint256 tokenID) public{
+        require(_markedTokens[tokenID], "Ticket already signed");
+        require(msg.sender != this.ownerOf(tokenID), "You are not the owner of the nft");
+        _markedTokens[tokenID] = true; 
+    }
+    function getAddressTokens(address owner) public view returns (uint256[] memory) {
+        uint256[] memory tokens = new uint256[](this.balanceOf(owner));
+        for (uint256 i = 0; i < _tokenCounter; i++){
+            if (ownerOf(i) == owner){
+                tokens[tokens.length] = i;
+            }
+        }
+        return tokens;
+    }
+    function getTokens() public view returns (uint256[] memory) {
+       return this.getAddressTokens(msg.sender);
+    }
 
     function _mintMultipleUnsafe(address pAccount, uint256 pAmount) private {
         // Mint each token
