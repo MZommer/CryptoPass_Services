@@ -11,7 +11,7 @@ library SaleLib {
         uint256 maxMintPerTx;
         uint256 maxMintPerAccount;
         bool isPaused;
-        bytes32 merkleRoot;
+        //bytes32 merkleRoot;
         uint256 stock;
         uint256 minted;
     }
@@ -23,19 +23,19 @@ library SaleLib {
         uint256 pMaxMintPerTx,
         uint256 pMaxMintPerAccount,
         bool pIsPaused,
-        bytes32 pSaleMerkleRoot,
+        //bytes32 pSaleMerkleRoot,
         uint256 pStock) public view returns (Sale memory) {
         require(pStock > 0, "Invalid sale stock");
-        require(
-            pStartTime > block.timestamp,
-            "Start time must be in the future"
-        );
+        //require(
+        //    pStartTime > block.timestamp,
+        //    "Start time must be in the future"
+        //);
         require(
             pStartTime <= pWhitelistEndTime,
             "Whitelist end time must be after or equal than start time"
         );
 
-        require(pSaleMerkleRoot != 0, "Invalid merkle root. Must be non-zero");
+        //require(pSaleMerkleRoot != 0, "Invalid merkle root. Must be non-zero");
         require(pPrice > 0, "Price must be greater than 0");
         return Sale(pStartTime,
                 pWhitelistEndTime,
@@ -44,7 +44,7 @@ library SaleLib {
                 pMaxMintPerTx,
                 pMaxMintPerAccount,
                 pIsPaused,
-                pSaleMerkleRoot,
+                //pSaleMerkleRoot,
                 pStock,
                 0);
     }
@@ -76,7 +76,7 @@ library SaleLib {
         uint256 pMaxMintPerTx,
         uint256 pMaxMintPerAccount,
         bool pIsPaused,
-        bytes32 pSaleMerkleRoot,
+        //bytes32 pSaleMerkleRoot,
         uint256 pStock) public returns (Sale memory) {
         
         // Stock is greater than 0
@@ -97,7 +97,7 @@ library SaleLib {
                 sale.startTime > block.timestamp,
             "Sale already started");
         // Valid merkle root is passed
-        require(pSaleMerkleRoot != 0, "Invalid merkle root. Must be non-zero");
+        //require(pSaleMerkleRoot != 0, "Invalid merkle root. Must be non-zero");
         // Price is greater than 0
         require(pPrice > 0, "Price must be greater than 0");
         sale.price = pPrice;
@@ -107,7 +107,7 @@ library SaleLib {
         sale.stock = pStock;
         sale.startTime = pStartTime;
         sale.whitelistEndTime = pWhitelistEndTime;
-        sale.merkleRoot = pSaleMerkleRoot;
+        //sale.merkleRoot = pSaleMerkleRoot;
         sale.isPaused = pIsPaused;
 
         return sale;

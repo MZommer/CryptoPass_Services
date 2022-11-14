@@ -10,6 +10,18 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./SaleLib.sol";
 
+struct EventInfo {
+    string Title;
+    string Description;
+    string Location;
+    uint32 Date;  // UNIX Timestamp
+    uint32 ReleaseDate; // ^^
+    bool   IsActive;
+    bool   IsPublic;
+    uint32 TicketAmount;
+    uint8  MinAge;
+}
+
 contract Event is ERC721, ReentrancyGuard, Ownable {
     using Strings for uint256;
     using SaleLib for SaleLib.Sale;
@@ -23,27 +35,17 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
     mapping(address => uint256) public teamMinted;
     uint256 public mintedReserved = 0;
     uint256 public mintedPublic = 0;
+    uint32  public mintedTickets = 0;
     // Keeps track of minted tokens
     uint256 internal _tokenCounter = 0;
+
     // Whatever this is?
     bytes32 public teamMerkleRoot = 0;
 
-    // ?? Research abt SaleLib --> TIMM.sol 
     SaleLib.Sale[] public sales;
+    EventInfo public eventInfo;
     
     mapping(uint256 => bool) private _markedTokens;
-
-    //  DB Vars //
-    string   public Title;
-    string   public Description;
-    string   public Location;
-    uint32   public Date;  // UNIX Timestamp
-    uint32   public ReleaseDate; // ^^
-    bool     public IsActive;
-    bool     public IsPublic;
-    uint32   public TicketAmount;
-    uint8    public MinAge;
-    uint32   public mintedTickets = 0;
 
     // make the mapping for the address -->
     mapping(string => mapping(uint256 => address)) private _tickets;
@@ -57,16 +59,18 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
                 bool   pIsPublic,
                 uint32 pTicketAmount,
                 uint8  pMinAge) ERC721("Event", "EVT") {
-        Title = pTitle;
-        Description = pDescription;
-        Location = pLocation;
-        Date = pDate;
-        ReleaseDate = pReleaseDate;
-        IsActive = pIsActive;
-        IsPublic = pIsPublic;
-        TicketAmount = pTicketAmount;
-        MAX_SUPPLY = TicketAmount;
-        MinAge = pMinAge;
+        eventInfo = EventInfo(
+            pTitle,
+            pDescription,
+            pLocation,
+            pDate,
+            pReleaseDate,
+            pIsActive,
+            pIsPublic,
+            pTicketAmount,
+            pMinAge
+        );
+        MAX_SUPPLY = pTicketAmount;
     }
     
     function mint(
@@ -132,17 +136,17 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         require(msg.sender != this.ownerOf(tokenID), "You are not the owner of the nft");
         _markedTokens[tokenID] = true; 
     }
-    function getAddressTokens(address owner) public view returns (uint256[] memory) {
-        uint256[] memory tokens = new uint256[](this.balanceOf(owner));
-        for (uint256 i = 0; i < _tokenCounter; i++){
-            if (ownerOf(i) == owner){
-                tokens[tokens.length] = i;
+    function getAddressTokens(address addr) public view returns (uint256[] memory) {
+        uint256[] memory tokens = new uint256[](balanceOf(addr));
+        for (uint256 i = 1; i < _tokenCounter; i++){
+            if (ownerOf(i) == addr){
+                tokens[tokens.length-1] = i;
             }
         }
         return tokens;
     }
     function getTokens() public view returns (uint256[] memory) {
-       return this.getAddressTokens(msg.sender);
+       return getAddressTokens(msg.sender);
     }
 
     function _mintMultipleUnsafe(address pAccount, uint256 pAmount) private {
@@ -214,8 +218,8 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         uint256 pEndPrice,
         uint256 pMaxMintPerTx,
         uint256 pMaxMintPerAccount,
-        uint256 pStock,
-        bytes32 pSaleMerkleRoot
+        //bytes32 pSaleMerkleRoot,
+        uint256 pStock
     ) public onlyOwner {
         SaleLib.Sale memory sale = SaleLib.createSale(
             pStartTime,
@@ -225,7 +229,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
             pMaxMintPerTx,
             pMaxMintPerAccount,
             false,
-            pSaleMerkleRoot,
+            //pSaleMerkleRoot,
             pStock
         );
 
@@ -245,8 +249,8 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
         uint256 pMaxMintPerTx,
         uint256 pMaxMintPerAccount,
         bool pIsPaused,
-        uint256 pStock,
-        bytes32 pSaleMerkleRoot
+        //bytes32 pSaleMerkleRoot,
+        uint256 pStock
     ) public onlyOwner {
         // Valid sale id
         require(pSaleId < sales.length, "Invalid sale id");
@@ -258,7 +262,7 @@ contract Event is ERC721, ReentrancyGuard, Ownable {
             pMaxMintPerTx,
             pMaxMintPerAccount,
             pIsPaused,
-            pSaleMerkleRoot,
+            //pSaleMerkleRoot,
             pStock
         );
     }
