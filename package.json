@@ -1,0 +1,33 @@
+{
+  "name": "CryptoPassServices",
+  "version": "1.0.0",
+  "description": "Crypto Pass Public Services",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MZommer/CryptoPass_Services.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MZommer/CryptoPass_Services/issues"
+  },
+  "homepage": "https://github.com/MZommer/CryptoPass_Services#readme",
+  "dependencies": {
+    "@openzeppelin/cli": "^2.8.2",
+    "@openzeppelin/contracts": "^4.6.0",
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.1",
+    "hashids": "^2.2.10",
+    "mongoose": "^6.3.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "hardhat": "^2.12.2"
+  }
+}
